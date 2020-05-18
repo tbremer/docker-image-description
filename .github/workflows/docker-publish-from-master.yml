@@ -8,7 +8,7 @@ on:
 
 jobs:
   publish_dev:
-    name: Publish Dev/Staging Docker image
+    name: Publish Docker image
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: Set env
         run: |
           echo "::set-env name=REGISTRY_URL::docker.pkg.github.com/tbremer/docker-image-description"
-          echo "::set-env name=PACKAGE_NAME::the-image"
+          echo "::set-env name=PACKAGE_NAME::description-image"
 
       - name: Build image
         run: docker build ./ --tag $REGISTRY_URL/$PACKAGE_NAME:latest
