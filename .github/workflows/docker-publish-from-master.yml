@@ -1,0 +1,29 @@
+name: Docker (latest)
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+jobs:
+  publish_dev:
+    name: Publish Dev/Staging Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set env
+        run: |
+          echo "::set-env name=REGISTRY_URL::docker.pkg.github.com/tbremer/docker-image-description"
+          echo "::set-env name=PACKAGE_NAME::the-image"
+
+      - name: Build image
+        run: docker build ./ --tag $REGISTRY_URL/$PACKAGE_NAME:latest
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: docker push $REGISTRY_URL/$PACKAGE_NAME:latest
